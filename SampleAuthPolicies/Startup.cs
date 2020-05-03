@@ -1,8 +1,10 @@
 using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using IdentityServer4.Models;
+using IdentityServer4.Services;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SampleAuthPolicies
@@ -24,11 +26,31 @@ namespace SampleAuthPolicies
                         AllowAccessTokensViaBrowser = false,
                         RequireClientSecret = false,
                         AllowedScopes = { "foo-api" },
+                        
                     },
                })
                .AddTestUsers(new List<TestUser>
                {
-                   new TestUser { SubjectId = "ABC-123", Username = "john", Password = "secret", },
+                   new TestUser
+                   {
+                       SubjectId = "ABC-123",
+                       Username = "john",
+                       Password = "secret",
+                       Claims = new[]
+                       {
+                           new Claim("role", "user"),
+                           new Claim("domain", "foo") },
+                   },
+                   new TestUser
+                   {
+                       SubjectId = "QWE-567",
+                       Username = "admin",
+                       Password = "secret",
+                       Claims = new[]
+                       {
+                           new Claim("role", "admin"),
+                       },
+                   },
                })
                .AddDeveloperSigningCredential();
 
@@ -42,8 +64,7 @@ namespace SampleAuthPolicies
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
             app.UseIdentityServer();
@@ -52,6 +73,21 @@ namespace SampleAuthPolicies
             app.UseAuthorization();
             app.UseFileServer();
             app.UseEndpoints(e => e.MapControllers());
+        }
+    }
+
+    public class ProfileService : IProfileService
+    {
+        public Task GetProfileDataAsync(ProfileDataRequestContext context)
+        {
+            var role = context.Subject.FindFirst(ClaimTypes.Role);
+            context.IssuedClaims.Add(role);
+            return Task.CompletedTask;
+        }
+
+        public Task IsActiveAsync(IsActiveContext context)
+        {
+            return Task.CompletedTask;
         }
     }
 }
