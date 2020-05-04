@@ -9,6 +9,19 @@
             background: #fafafa;
             box-sizing: border-box;
         }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            max-width: 30em;
+        }
+        .buttons > button {
+            margin: 2px 0;
+            padding: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            outline: 1px solid black;;
+        }
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
@@ -79,24 +92,23 @@
     </script>
 </head>
 <body style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
-    <h1>Test page</h1>
     <p>Page best viewed with developer console open.</p>
-    <p>
-        <button id="btnResetToken">Clear access token</button><br />
-        <button id="btnJohn">Get Access Token for user John (blacklisted user!)</button><br />
-        <button id="btnMarcus">Get Access Token for user Marcus (user)</button><br />
-        <button id="btnMary">Get Access Token for user Mary (editor)</button><br />
-        <button id="btnAdmin">Get Access Token for Administrator</button>
+    <p class="buttons">
+        <button id="btnResetToken">Clear access token</button>
+        <button id="btnJohn">Fetch Access Token for John (blacklisted user!)</button>
+        <button id="btnMarcus">Fetch Access Token for Marcus (user)</button>
+        <button id="btnMary">Fetch Access Token for Mary (editor)</button>
+        <button id="btnAdmin">Fetch Access Token for Administrator</button>
     </p>
-    <p>
-        <button id="index">GET /endpoint-specific-security/</button><br />
-        <button id="allow-anonymous">GET /endpoint-specific-security/allow-anonymous</button><br />
-        <button id="plain-authorize">GET /endpoint-specific-security/plain-authorize</button><br />
-        <button id="at-least-editor">GET /endpoint-specific-security/at-least-editor</button><br />
-        <button id="admin-role-only">GET /endpoint-specific-security/admin-role-only</button><br />
+    <p class="buttons">
+        <button id="index">GET /endpoint-specific-security/</button>
+        <button id="allow-anonymous">GET /endpoint-specific-security/allow-anonymous</button>
+        <button id="plain-authorize">GET /endpoint-specific-security/plain-authorize</button>
+        <button id="at-least-editor">GET /endpoint-specific-security/at-least-editor</button>
+        <button id="admin-role-only">GET /endpoint-specific-security/admin-role-only</button>
     </p>
     <p>Response:</p>
-    <textarea id="data"></textarea>
+    <textarea id="data" style="height: 20em;"></textarea>
     <p>Access token:</p>
     <textarea id="token" style="height: 25em;"></textarea>
 </body>
