@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using IdentityServer4.Models;
-using IdentityServer4.Services;
 using IdentityServer4.Test;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,8 +36,8 @@ namespace SampleAuthPolicies
                        Password = "secret",
                        Claims = new[]
                        {
-                           new Claim("role", "user"),
-                           new Claim("domain", "foo") },
+                           new Claim("role", "user"), // TODO: https://stackoverflow.com/q/61588752/419956
+                           new Claim("domain", "foo") }, // TODO: https://stackoverflow.com/q/61588752/419956
                    },
                    new TestUser
                    {
@@ -48,7 +46,7 @@ namespace SampleAuthPolicies
                        Password = "secret",
                        Claims = new[]
                        {
-                           new Claim("role", "admin"),
+                           new Claim("role", "admin"), // TODO: https://stackoverflow.com/q/61588752/419956
                        },
                    },
                })
@@ -61,6 +59,10 @@ namespace SampleAuthPolicies
                     options.Audience = "foo-api";
                 });
 
+            services.AddAuthorization(o => o
+                .AddPolicy(nameof(AuthorizationPolicies.RequireAuthenticatedUser), AuthorizationPolicies.RequireAuthenticatedUser)
+            );
+
             services.AddControllers();
         }
 
@@ -72,22 +74,10 @@ namespace SampleAuthPolicies
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseFileServer();
-            app.UseEndpoints(e => e.MapControllers());
-        }
-    }
-
-    public class ProfileService : IProfileService
-    {
-        public Task GetProfileDataAsync(ProfileDataRequestContext context)
-        {
-            var role = context.Subject.FindFirst(ClaimTypes.Role);
-            context.IssuedClaims.Add(role);
-            return Task.CompletedTask;
-        }
-
-        public Task IsActiveAsync(IsActiveContext context)
-        {
-            return Task.CompletedTask;
+            app.UseEndpoints(e => e
+                .MapControllers()
+                .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedUser))
+            );
         }
     }
 }

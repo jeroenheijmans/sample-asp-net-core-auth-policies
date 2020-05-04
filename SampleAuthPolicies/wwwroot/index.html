@@ -18,6 +18,18 @@
                 capturedAccessToken = null;
             }
 
+            // By @Peheje at https://stackoverflow.com/a/38552302/419956 cc-by-sa 4.0
+            function parseJwt(token) {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(atob(base64)
+                    .split('')
+                    .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join(''));
+
+                return JSON.parse(jsonPayload);
+            };
+
             async function apiGet(route) {
                 const headers = capturedAccessToken ? { "Authorization": `Bearer ${capturedAccessToken}` } : {};
                 const response = await fetch(route, { headers });
@@ -44,7 +56,7 @@
 
                 if (!!json.access_token) {
                     capturedAccessToken = json.access_token;
-                    el("token").innerText = capturedAccessToken;
+                    el("token").innerHTML = JSON.stringify(parseJwt(capturedAccessToken), null, 2);
                 }
 
                 return JSON.stringify(json, null, 2);
@@ -80,6 +92,6 @@
     <p>Response:</p>
     <textarea id="data"></textarea>
     <p>Access token:</p>
-    <textarea id="token"></textarea>
+    <textarea id="token" style="height: 25em;"></textarea>
 </body>
 </html>
