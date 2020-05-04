@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Security.Claims;
+using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,7 +43,17 @@ namespace SampleAuthPolicies
                    },
                    new TestUser
                    {
-                       SubjectId = "QWE-567",
+                       SubjectId = "EFG-456",
+                       Username = "mary",
+                       Password = "secret",
+                       Claims = new[]
+                       {
+                           new Claim("role", "user"), // TODO: https://stackoverflow.com/q/61588752/419956
+                           new Claim("domain", "foo") }, // TODO: https://stackoverflow.com/q/61588752/419956
+                   },
+                   new TestUser
+                   {
+                       SubjectId = "HIJ-789",
                        Username = "admin",
                        Password = "secret",
                        Claims = new[]
@@ -53,15 +65,21 @@ namespace SampleAuthPolicies
                .AddDeveloperSigningCredential();
 
             services.AddAuthentication("Bearer")
-                .AddJwtBearer("Bearer", options =>
+                .AddIdentityServerAuthentication(options =>
                 {
                     options.Authority = "https://localhost:5001";
-                    options.Audience = "foo-api";
+                    options.ApiName = "foo-api";
+                    options.SupportedTokens = SupportedTokens.Jwt;
                 });
 
-            services.AddAuthorization(o => o
-                .AddPolicy(nameof(AuthorizationPolicies.RequireAuthenticatedUser), AuthorizationPolicies.RequireAuthenticatedUser)
-            );
+            services.AddSingleton<IAuthorizationHandler, BlacklistUserHandler>();
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .RequireNoBlacklistedUsers()
+                    .Build();
+            });
 
             services.AddControllers();
         }
@@ -74,10 +92,7 @@ namespace SampleAuthPolicies
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseFileServer();
-            app.UseEndpoints(e => e
-                .MapControllers()
-                .RequireAuthorization(nameof(AuthorizationPolicies.RequireAuthenticatedUser))
-            );
+            app.UseEndpoints(e => e.MapControllers().RequireAuthorization());
         }
     }
 }

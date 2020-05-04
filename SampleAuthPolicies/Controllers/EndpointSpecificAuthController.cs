@@ -26,7 +26,6 @@ namespace SampleAuthPolicies.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult<Response> GetAdminOnly()
             => new Response { Data = "Result from endpoint with [Authorize(Roles = \"admin\")]" };
-
     }
 
     public class Response

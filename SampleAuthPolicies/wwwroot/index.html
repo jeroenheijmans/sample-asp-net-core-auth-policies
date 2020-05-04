@@ -61,10 +61,11 @@
 
                 return JSON.stringify(json, null, 2);
             }
-            
+
             const el = id => document.getElementById(id);
 
             el("btnResetToken").addEventListener("click", () => el("data").value = clearAccessToken());
+            el("btnMary").addEventListener("click", async () => el("data").value = await getTokenResponse("mary"));
             el("btnJohn").addEventListener("click", async () => el("data").value = await getTokenResponse("john"));
             el("btnAdmin").addEventListener("click", async () => el("data").value = await getTokenResponse("admin"));
 
@@ -80,7 +81,8 @@
     <p>Page best viewed with developer console open.</p>
     <p>
         <button id="btnResetToken">Clear access token</button><br />
-        <button id="btnJohn">Get Access Token for user John</button><br />
+        <button id="btnJohn">Get Access Token for user John (blacklisted user!)</button><br />
+        <button id="btnMary">Get Access Token for user Mary</button><br />
         <button id="btnAdmin">Get Access Token for Administrator</button>
     </p>
     <p>
