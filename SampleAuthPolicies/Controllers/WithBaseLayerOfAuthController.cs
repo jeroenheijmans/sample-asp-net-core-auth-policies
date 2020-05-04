@@ -4,11 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace SampleAuthPolicies.Controllers
 {
     [ApiController]
-    [Route("endpoint-specific-security")]
-    public class EndpointSpecificAuthController : ControllerBase
+    [Route("with-base-layer-of-auth")]
+    [Authorize(Policy = nameof(AuthorizationPolicies.AtLeastEditor))]
+    public class WithBaseLayerOfAuthController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<Response> Get() 
+        public ActionResult<Response> Get()
             => new Response { Data = "Result from endpoint without Authorize attribute" };
 
         [HttpGet("allow-anonymous")]

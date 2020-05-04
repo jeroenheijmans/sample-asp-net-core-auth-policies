@@ -29,6 +29,7 @@
 
             function clearAccessToken() {
                 capturedAccessToken = null;
+                el("token").innerHTML = "";
             }
 
             // By @Peheje at https://stackoverflow.com/a/38552302/419956 cc-by-sa 4.0
@@ -76,6 +77,7 @@
             }
 
             const el = id => document.getElementById(id);
+            const els = selector => Array.from(document.querySelectorAll(selector));
 
             el("btnResetToken").addEventListener("click", () => el("data").value = clearAccessToken());
             el("btnJohn").addEventListener("click", async () => el("data").value = await getTokenResponse("john"));
@@ -83,11 +85,10 @@
             el("btnMary").addEventListener("click", async () => el("data").value = await getTokenResponse("mary"));
             el("btnAdmin").addEventListener("click", async () => el("data").value = await getTokenResponse("admin"));
 
-            el("index").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/"));
-            el("allow-anonymous").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/allow-anonymous"));
-            el("plain-authorize").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/plain-authorize"));
-            el("at-least-editor").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/at-least-editor"));
-            el("admin-role-only").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/admin-role-only"));
+            els("button.getter").forEach(btn => {
+                btn.innerHTML = "GET /" + btn.dataset.route;
+                btn.addEventListener("click", async () => el("data").value = await apiGet(btn.dataset.route));
+            });
         });
     </script>
 </head>
@@ -100,13 +101,22 @@
         <button id="btnMary">Fetch Access Token for Mary (editor)</button>
         <button id="btnAdmin">Fetch Access Token for Administrator</button>
     </p>
-    <p class="buttons">
-        <button id="index">GET /endpoint-specific-security/</button>
-        <button id="allow-anonymous">GET /endpoint-specific-security/allow-anonymous</button>
-        <button id="plain-authorize">GET /endpoint-specific-security/plain-authorize</button>
-        <button id="at-least-editor">GET /endpoint-specific-security/at-least-editor</button>
-        <button id="admin-role-only">GET /endpoint-specific-security/admin-role-only</button>
-    </p>
+    <div style="display: flex;">
+        <p class="buttons" style="margin-right: 20px;">
+            <button class="getter" data-route="endpoint-specific-security/"></button>
+            <button class="getter" data-route="endpoint-specific-security/allow-anonymous"></button>
+            <button class="getter" data-route="endpoint-specific-security/plain-authorize"></button>
+            <button class="getter" data-route="endpoint-specific-security/at-least-editor"></button>
+            <button class="getter" data-route="endpoint-specific-security/admin-role-only"></button>
+        </p>
+        <p class="buttons">
+            <button class="getter" data-route="with-base-layer-of-auth/"></button>
+            <button class="getter" data-route="with-base-layer-of-auth/allow-anonymous"></button>
+            <button class="getter" data-route="with-base-layer-of-auth/plain-authorize"></button>
+            <button class="getter" data-route="with-base-layer-of-auth/at-least-editor"></button>
+            <button class="getter" data-route="with-base-layer-of-auth/admin-role-only"></button>
+        </p>
+    </div>
     <p>Response:</p>
     <textarea id="data" style="height: 20em;"></textarea>
     <p>Access token:</p>
