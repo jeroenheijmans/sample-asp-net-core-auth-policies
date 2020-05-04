@@ -65,13 +65,15 @@
             const el = id => document.getElementById(id);
 
             el("btnResetToken").addEventListener("click", () => el("data").value = clearAccessToken());
-            el("btnMary").addEventListener("click", async () => el("data").value = await getTokenResponse("mary"));
             el("btnJohn").addEventListener("click", async () => el("data").value = await getTokenResponse("john"));
+            el("btnMarcus").addEventListener("click", async () => el("data").value = await getTokenResponse("marcus"));
+            el("btnMary").addEventListener("click", async () => el("data").value = await getTokenResponse("mary"));
             el("btnAdmin").addEventListener("click", async () => el("data").value = await getTokenResponse("admin"));
 
             el("index").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/"));
             el("allow-anonymous").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/allow-anonymous"));
             el("plain-authorize").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/plain-authorize"));
+            el("at-least-editor").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/at-least-editor"));
             el("admin-role-only").addEventListener("click", async () => el("data").value = await apiGet("endpoint-specific-security/admin-role-only"));
         });
     </script>
@@ -82,13 +84,15 @@
     <p>
         <button id="btnResetToken">Clear access token</button><br />
         <button id="btnJohn">Get Access Token for user John (blacklisted user!)</button><br />
-        <button id="btnMary">Get Access Token for user Mary</button><br />
+        <button id="btnMarcus">Get Access Token for user Marcus (user)</button><br />
+        <button id="btnMary">Get Access Token for user Mary (editor)</button><br />
         <button id="btnAdmin">Get Access Token for Administrator</button>
     </p>
     <p>
         <button id="index">GET /endpoint-specific-security/</button><br />
         <button id="allow-anonymous">GET /endpoint-specific-security/allow-anonymous</button><br />
         <button id="plain-authorize">GET /endpoint-specific-security/plain-authorize</button><br />
+        <button id="at-least-editor">GET /endpoint-specific-security/at-least-editor</button><br />
         <button id="admin-role-only">GET /endpoint-specific-security/admin-role-only</button><br />
     </p>
     <p>Response:</p>

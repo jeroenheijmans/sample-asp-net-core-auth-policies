@@ -48,6 +48,13 @@ namespace SampleAuthPolicies
                    },
                    new TestUser
                    {
+                       SubjectId = "ABC-556",
+                       Username = "marcus",
+                       Password = "secret",
+                       Claims = { new Claim("role", "user") },
+                   },
+                   new TestUser
+                   {
                        SubjectId = "EFG-456",
                        Username = "mary",
                        Password = "secret",
@@ -78,6 +85,8 @@ namespace SampleAuthPolicies
                     .RequireAuthenticatedUser()
                     .RequireNoBlacklistedUsers()
                     .Build();
+
+                options.AddPolicy(nameof(AuthorizationPolicies.AtLeastEditor), AuthorizationPolicies.AtLeastEditor());
             });
 
             services.AddControllers();

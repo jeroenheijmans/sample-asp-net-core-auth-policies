@@ -12,6 +12,13 @@ namespace SampleAuthPolicies
             builder.AddRequirements(new BlacklistUserRequirement("ABC-123", "XYZ-999"));
             return builder;
         }
+
+        public static AuthorizationPolicy AtLeastEditor()
+        {
+            return new AuthorizationPolicyBuilder()
+                .RequireRole("editor", "admin") // but not "user"
+                .Build();
+        }
     }
 
     public class BlacklistUserRequirement : IAuthorizationRequirement

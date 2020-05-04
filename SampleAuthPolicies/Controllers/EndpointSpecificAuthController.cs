@@ -22,10 +22,15 @@ namespace SampleAuthPolicies.Controllers
         public ActionResult<Response> GetPlainAuthorize()
             => new Response { Data = "Result from endpoint with plainly [Authorize]" };
 
+        [HttpGet("at-least-editor")]
+        [Authorize(Policy = nameof(AuthorizationPolicies.AtLeastEditor))]
+        public ActionResult<Response> GetAtLeastEditor()
+            => new Response { Data = "Result from endpoint with [Authorize(Policy = nameof(AuthorizationPolicies.AtLeastEditor))]" };
+
         [HttpGet("admin-role-only")]
         [Authorize(Roles = "admin")]
         public ActionResult<Response> GetAdminOnly()
-            => new Response { Data = "Result from endpoint with [Authorize(Roles = \"admin\")]" };
+            => new Response { Data = "Result from endpoint with [Authorize(Roles = 'admin')]" };
     }
 
     public class Response
