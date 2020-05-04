@@ -14,7 +14,16 @@ namespace SampleAuthPolicies
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentityServer()
-               .AddInMemoryApiResources(new[] { new ApiResource("foo-api") })
+               .AddInMemoryApiResources(new ApiResource[]
+               {
+                   new ApiResource("foo-api")
+                   {
+                       Scopes =
+                       {
+                           new Scope("foo-api.with.roles", new[] { "role" }),
+                       }
+                   }
+               })
                .AddInMemoryClients(new[]
                {
                     new Client
@@ -25,8 +34,7 @@ namespace SampleAuthPolicies
                         AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                         AllowAccessTokensViaBrowser = false,
                         RequireClientSecret = false,
-                        AllowedScopes = { "foo-api" },
-                        
+                        AllowedScopes = { "foo-api", "foo-api.with.roles" },
                     },
                })
                .AddTestUsers(new List<TestUser>
@@ -36,30 +44,21 @@ namespace SampleAuthPolicies
                        SubjectId = "ABC-123",
                        Username = "john",
                        Password = "secret",
-                       Claims = new[]
-                       {
-                           new Claim("role", "user"), // TODO: https://stackoverflow.com/q/61588752/419956
-                           new Claim("domain", "foo") }, // TODO: https://stackoverflow.com/q/61588752/419956
+                       Claims = { new Claim("role", "user") },
                    },
                    new TestUser
                    {
                        SubjectId = "EFG-456",
                        Username = "mary",
                        Password = "secret",
-                       Claims = new[]
-                       {
-                           new Claim("role", "user"), // TODO: https://stackoverflow.com/q/61588752/419956
-                           new Claim("domain", "foo") }, // TODO: https://stackoverflow.com/q/61588752/419956
+                       Claims = { new Claim("role", "editor") },
                    },
                    new TestUser
                    {
                        SubjectId = "HIJ-789",
                        Username = "admin",
                        Password = "secret",
-                       Claims = new[]
-                       {
-                           new Claim("role", "admin"), // TODO: https://stackoverflow.com/q/61588752/419956
-                       },
+                       Claims = { new Claim("role", "admin") },
                    },
                })
                .AddDeveloperSigningCredential();
