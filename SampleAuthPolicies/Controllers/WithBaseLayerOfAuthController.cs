@@ -32,5 +32,10 @@ namespace SampleAuthPolicies.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult<Response> GetAdminOnly()
             => new Response { Data = "Result from endpoint with [Authorize(Roles = 'admin')]" };
+
+        [HttpGet("allow-anonymous-based-on-config")]
+        [Authorize(Policy = nameof(AuthorizationPolicies.AllowAnonymousBasedOnConfig))]
+        public ActionResult<Response> GetAllowAnonymousUnlessConfigForbidsIt()
+                => new Response { Data = "Result from endpoint with [Authorize(Policy = nameof(AuthorizationPolicies.AllowAnonymousBasedOnConfig)]" };
     }
 }

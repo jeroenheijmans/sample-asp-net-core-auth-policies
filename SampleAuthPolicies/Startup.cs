@@ -79,6 +79,7 @@ namespace SampleAuthPolicies
                 });
 
             services.AddSingleton<IAuthorizationHandler, BlacklistUserHandler>();
+            services.AddSingleton<IAuthorizationHandler, AllowAnonymousBasedOnConfigHandler>();
             services.AddAuthorization(options =>
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -87,6 +88,7 @@ namespace SampleAuthPolicies
                     .Build();
 
                 options.AddPolicy(nameof(AuthorizationPolicies.AtLeastEditor), AuthorizationPolicies.AtLeastEditor());
+                options.AddPolicy(nameof(AuthorizationPolicies.AllowAnonymousBasedOnConfig), AuthorizationPolicies.AllowAnonymousBasedOnConfig());
             });
 
             services.AddControllers();
