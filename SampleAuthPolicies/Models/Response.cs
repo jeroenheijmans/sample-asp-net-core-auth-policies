@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SampleAuthPolicies.Controllers
+namespace SampleAuthPolicies.Models
 {
     public class Response
     {
