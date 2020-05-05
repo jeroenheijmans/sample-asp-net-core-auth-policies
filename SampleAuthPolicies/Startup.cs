@@ -6,6 +6,7 @@ using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using SampleAuthPolicies.Authorization;
 
 namespace SampleAuthPolicies
 {
@@ -78,7 +79,7 @@ namespace SampleAuthPolicies
                     options.SupportedTokens = SupportedTokens.Jwt;
                 });
 
-            services.AddSingleton<IAuthorizationHandler, BlacklistUserHandler>();
+            services.AddSingleton<IAuthorizationHandler, BlacklistUsersHandler>();
             services.AddSingleton<IAuthorizationHandler, AllowAnonymousBasedOnConfigHandler>();
             services.AddAuthorization(options =>
             {
