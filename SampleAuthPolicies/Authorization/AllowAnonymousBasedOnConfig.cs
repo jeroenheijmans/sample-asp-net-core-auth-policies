@@ -6,7 +6,7 @@ namespace SampleAuthPolicies.Authorization
 {
     public class AllowAnonymousBasedOnConfigRequirement : IAuthorizationRequirement
     {
-        public bool IsAnonymousALlowed { get; set; }
+        public bool IsAnonymousAllowed { get; set; }
     }
 
     public class AllowAnonymousBasedOnConfigHandler : AuthorizationHandler<AllowAnonymousBasedOnConfigRequirement>
@@ -15,7 +15,7 @@ namespace SampleAuthPolicies.Authorization
             AuthorizationHandlerContext context,
             AllowAnonymousBasedOnConfigRequirement requirement)
         {
-            if (requirement.IsAnonymousALlowed)
+            if (requirement.IsAnonymousAllowed)
             {
                 context.Succeed(requirement);
             }

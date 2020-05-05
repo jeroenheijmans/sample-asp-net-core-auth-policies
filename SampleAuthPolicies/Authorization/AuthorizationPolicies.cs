@@ -22,7 +22,7 @@ namespace SampleAuthPolicies.Authorization
             return new AuthorizationPolicyBuilder()
                 .AddRequirements(new AllowAnonymousBasedOnConfigRequirement
                 {
-                    IsAnonymousALlowed = true, // Could come from IConfiguration...
+                    IsAnonymousAllowed = true, // Could come from IConfiguration...
                 })
                 .Build();
         }
